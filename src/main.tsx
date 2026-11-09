@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import App from "./App";
 import "./style.css";
 import "./cards.css";
+import "./features/kana/kana.css";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

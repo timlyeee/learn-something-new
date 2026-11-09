@@ -5,7 +5,7 @@ import {
   Stack,
   ChatCircle,
   Gear,
-  FlowerLotus,
+  Sparkle,
   Plant,
   Sun,
   CalendarCheck,
@@ -37,7 +37,7 @@ export default function Layout({
     <>
       <aside>
         <button className="brand" onClick={onBack}>
-          <FlowerLotus size={26} weight="regular" />
+          <Sparkle size={26} weight="regular" aria-hidden="true" />
           学点新的？
         </button>
         <div className="tagline">Learn sth new?</div>

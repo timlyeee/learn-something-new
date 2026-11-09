@@ -1,5 +1,7 @@
 import { useRef, useState } from "react";
 import { X, SpeakerHigh, Trophy, Plant } from "@phosphor-icons/react";
+import { useSoundEffects } from "../features/exercises/audio/useSoundEffects";
+import SoundEffectsToggle from "../features/exercises/components/SoundEffectsToggle";
 import { resultFor, type Question, type QuizResult } from "../lib/quiz";
 import { speak } from "../lib/speech";
 
@@ -23,6 +25,8 @@ export default function QuizSession({
   const [mistakes, setMistakes] = useState<Question[]>([]);
   const [done, setDone] = useState(false);
   const [practice, setPractice] = useState(false);
+  const { soundEffectsEnabled, toggleSoundEffects, playCorrect } =
+    useSoundEffects();
   const recorded = useRef(false);
   const question = questions[index];
   const correct = selected === question?.answer;
@@ -50,6 +54,16 @@ export default function QuizSession({
       finish(result);
     }
     setDone(true);
+  }
+  function answer(value: string): void {
+    if (selected !== null) return;
+    setSelected(value);
+    if (value === question.answer) {
+      setScore((currentScore) => currentScore + 1);
+      playCorrect();
+    } else {
+      setMistakes((items) => [...items, question]);
+    }
   }
   if (done)
     return (
@@ -134,23 +148,17 @@ export default function QuizSession({
         <span>
           {index + 1} / {questions.length}
         </span>
+        <SoundEffectsToggle
+          enabled={soundEffectsEnabled}
+          onToggle={toggleSoundEffects}
+        />
       </div>
       <span className="eyebrow">
         {practice ? "错题巩固" : title} · {subtitle}
       </span>
       <h2 className="question-title">{question.hint}</h2>
-      <div
-        className={`question-prompt ${question.kind === "word" ? "word-prompt" : ""}`}
-        lang="ja"
-      >
-        {question.kind === "word" ? (
-          <ruby>
-            {question.prompt}
-            <rt>{question.reading}</rt>
-          </ruby>
-        ) : (
-          question.prompt
-        )}
+      <div className="question-prompt" lang="ja">
+        {question.prompt}
       </div>
       <button className="sound-button" onClick={() => speak(question.speak)}>
         <SpeakerHigh size={16} weight="regular" /> 听一听
@@ -161,12 +169,7 @@ export default function QuizSession({
             key={option}
             disabled={selected !== null}
             className={`answer-option ${selected !== null && option === question.answer ? "is-correct" : selected === option ? "is-wrong" : ""}`}
-            onClick={() => {
-              if (selected !== null) return;
-              setSelected(option);
-              if (option === question.answer) setScore((n) => n + 1);
-              else setMistakes((items) => [...items, question]);
-            }}
+            onClick={() => answer(option)}
           >
             <span className="option-number">{optionIndex + 1}</span>
             {option}

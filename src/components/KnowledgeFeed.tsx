@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 import { ArrowDown } from "@phosphor-icons/react";
 import { getKnowledgeFeedPage } from "../lib/knowledgeFeed";
 import type { KnowledgeFeedEntry } from "../types/knowledge";
+import { useMobileMasonry } from "../features/knowledge-feed/useMobileMasonry";
 import KnowledgeFeedCard from "./KnowledgeFeedCard";
 
 const PAGE_SIZE = 4;
@@ -18,6 +19,7 @@ export default function KnowledgeFeed({
   );
   const [isPending, startTransition] = useTransition();
   const sentinelRef = useRef<HTMLDivElement>(null);
+  const gridRef = useMobileMasonry(feed.items.length);
 
   const loadMore = useCallback(() => {
     if (!feed.nextCursor || isPending) return;
@@ -56,7 +58,7 @@ export default function KnowledgeFeed({
 
   return (
     <section className="knowledge-feed" aria-busy={isPending}>
-      <div className="knowledge-feed-grid">
+      <div className="knowledge-feed-grid" ref={gridRef}>
         {feed.items.map((entry) => (
           <KnowledgeFeedCard
             key={entry.card.id}

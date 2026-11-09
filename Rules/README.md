@@ -6,12 +6,13 @@
 
 先读 `000-project-workflow.md`，其余按下表按需加载。冲突时遵循系统与开发环境要求、用户当前指令、适用子目录指引、专项规则、基础规则的顺序；同层级以更具体规则优先。不要将规则理解成新增审批流程。
 
-| 文件                                               | 何时阅读                              |
-| -------------------------------------------------- | ------------------------------------- |
-| [000-project-workflow.md](000-project-workflow.md) | 所有项目修改、验证和交付              |
-| [100-code-style.md](100-code-style.md)             | 修改 TypeScript、React、CSS 或 Java   |
-| [110-ui-design.md](110-ui-design.md)               | 修改界面视觉、配色、字体、图标或交互  |
-| [200-learning-content.md](200-learning-content.md) | 修改假名、课程、题库、评分和存储      |
-| [210-android-api.md](210-android-api.md)           | 修改 Android、原生能力、AI 请求或打包 |
+| 文件                                                       | 何时阅读                              |
+| ---------------------------------------------------------- | ------------------------------------- |
+| [000-project-workflow.md](000-project-workflow.md)         | 所有项目修改、验证和交付              |
+| [100-code-style.md](100-code-style.md)                     | 修改 TypeScript、React、CSS 或 Java   |
+| [110-ui-design.md](110-ui-design.md)                       | 修改界面视觉、配色、字体、图标或交互  |
+| [120-feature-architecture.md](120-feature-architecture.md) | 新增功能、拆分目录、调整模块依赖      |
+| [200-learning-content.md](200-learning-content.md)         | 修改假名、课程、题库、评分和存储      |
+| [210-android-api.md](210-android-api.md)                   | 修改 Android、原生能力、AI 请求或打包 |
 
 新增、移动或删除规则时同步更新本索引。规则描述已实现的项目事实，规划内容应明确标记，不复制无关模板。

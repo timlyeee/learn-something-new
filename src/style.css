@@ -1,24 +1,59 @@
 :root {
-  /* 品牌 */
-  --primary: #f97316;
-  --primary-strong: #ea580c;
-  --primary-soft: #fdba74;
-  --on-primary: #2b1a0a;
+  /* Primitive：鲜亮橙 × 电光紫 */
+  --orange-50: #fff3ec;
+  --orange-100: #ffe0cf;
+  --orange-300: #ffad7f;
+  --orange-500: #ff6b2c;
+  --orange-600: #e94b0c;
+  --orange-700: #c73808;
+  --violet-25: #fbf9ff;
+  --violet-50: #f5f0ff;
+  --violet-100: #e9ddff;
+  --violet-200: #d8c4ff;
+  --violet-500: #8056ff;
+  --violet-600: #6d3aff;
+  --violet-700: #5524d6;
+  --violet-900: #24123d;
+  --yellow-400: #ffd84d;
+  --mint-400: #59e3c8;
+  --neutral-500: #66577f;
+  --neutral-700: #3f2a5f;
 
-  /* 表面 */
-  --bg: #fff7ed;
+  /* Semantic */
+  --primary: var(--violet-600);
+  --primary-strong: var(--violet-700);
+  --primary-soft: var(--violet-200);
+  --primary-tint: var(--violet-50);
+  --on-primary: #ffffff;
+  --accent: var(--orange-500);
+  --accent-hover: var(--orange-600);
+  --accent-strong: var(--orange-700);
+  --accent-tint: var(--orange-50);
+  --on-accent: var(--violet-900);
+  --highlight: var(--yellow-400);
+  --fresh: var(--mint-400);
+  --bg: #f1edff;
   --surface: #ffffff;
-  --surface-2: #ffedd5;
-  --surface-3: #fdf1e3;
+  --surface-2: var(--violet-50);
+  --surface-3: var(--violet-25);
+  --ink: var(--violet-900);
+  --ink-soft: var(--neutral-700);
+  --muted: var(--neutral-500);
+  --line: #ded3f5;
+  --line-strong: #c4afe9;
 
-  /* 文字 */
-  --ink: #2b1a0a;
-  --ink-soft: #5c4633;
-  --muted: #6b4f35;
-
-  /* 线条 */
-  --line: #f3d8b5;
-  --line-strong: #e9c08e;
+  /* Component */
+  --focus-ring: var(--violet-600);
+  --button-primary-bg: var(--orange-500);
+  --button-primary-hover: var(--orange-600);
+  --button-primary-depth: var(--violet-900);
+  --button-primary-fg: var(--on-accent);
+  --nav-active-bg: var(--orange-500);
+  --nav-active-fg: var(--violet-900);
+  --nav-active-border: var(--yellow-400);
+  --quiz-bg: var(--surface);
+  --quiz-border: var(--violet-600);
+  --art-shadow: 5px 5px 0 var(--violet-900);
 
   /* 语义 */
   --success: #16a34a;
@@ -31,10 +66,10 @@
   --info-bg: #eaf1fd;
 
   /* 装饰点缀 */
-  --amber: #f59e0b;
-  --teal: #14b8a6;
-  --blue: #3b82f6;
-  --pink: #ec4899;
+  --amber: var(--yellow-400);
+  --teal: var(--mint-400);
+  --blue: #2f7dff;
+  --pink: #ff4fa3;
   --gold: #eab308;
 
   /* 形状 */
@@ -45,10 +80,11 @@
   --radius-pill: 999px;
 
   /* 阴影 */
-  --shadow-xs: 0 1px 2px rgba(60, 34, 10, 0.06);
-  --shadow-sm: 0 3px 8px rgba(60, 34, 10, 0.07);
-  --shadow: 0 8px 20px rgba(60, 34, 10, 0.09), 0 2px 6px rgba(60, 34, 10, 0.05);
-  --shadow-lg: 0 16px 34px rgba(60, 34, 10, 0.14);
+  --shadow-xs: 0 1px 2px rgba(36, 18, 61, 0.08);
+  --shadow-sm: 0 4px 12px rgba(36, 18, 61, 0.1);
+  --shadow:
+    0 10px 26px rgba(36, 18, 61, 0.12), 0 2px 6px rgba(36, 18, 61, 0.06);
+  --shadow-lg: 0 18px 40px rgba(36, 18, 61, 0.16);
 
   /* 动效 */
   --ease: cubic-bezier(0.25, 0.1, 0.25, 1);
@@ -126,7 +162,7 @@ rt {
 
 /* 焦点与禁用 */
 :focus-visible {
-  outline: 2px solid var(--primary);
+  outline: 2px solid var(--focus-ring);
   outline-offset: 2px;
 }
 button:disabled {
@@ -148,7 +184,7 @@ button:active {
   font-weight: 800;
   letter-spacing: 2px;
   text-transform: uppercase;
-  color: var(--primary-strong);
+  color: var(--primary);
 }
 .status {
   color: var(--ink-soft);
@@ -160,8 +196,8 @@ button:active {
   color: var(--danger-ink);
 }
 .notice {
-  background: var(--surface-3);
-  border: 1px solid var(--line);
+  background: var(--accent-tint);
+  border: 1px solid var(--orange-300);
   border-radius: var(--radius);
   padding: 14px 16px;
   line-height: 1.8;
@@ -186,20 +222,20 @@ button:active {
     border-color var(--dur) var(--ease);
 }
 .primary {
-  background: var(--primary);
-  color: var(--on-primary);
+  background: var(--button-primary-bg);
+  color: var(--button-primary-fg);
   padding: 12px 22px;
   font-size: 15px;
   box-shadow:
-    0 4px 0 var(--primary-strong),
+    0 3px 0 var(--button-primary-depth),
     var(--shadow-sm);
 }
 .primary:hover {
-  background: var(--primary-strong);
+  background: var(--button-primary-hover);
 }
 .primary:active {
   transform: translateY(var(--press-y));
-  box-shadow: 0 1px 0 var(--primary-strong);
+  box-shadow: 0 1px 0 var(--button-primary-depth);
 }
 .secondary {
   background: var(--surface);
@@ -265,14 +301,43 @@ textarea:focus {
 /* 布局：桌面侧边栏 */
 aside {
   width: 228px;
-  background: var(--surface);
+  overflow: hidden;
+  background: var(--violet-600);
   position: fixed;
   inset: 0 auto 0 0;
-  border-right: 1px solid var(--line);
+  border-right: 3px solid var(--violet-900);
   padding: 30px 20px;
   display: flex;
   flex-direction: column;
   z-index: 20;
+}
+aside::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: -62px;
+  right: -54px;
+  width: 150px;
+  height: 150px;
+  border: 3px solid var(--violet-900);
+  background: var(--orange-500);
+  transform: rotate(28deg);
+}
+aside::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  right: 20px;
+  bottom: 170px;
+  width: 76px;
+  height: 44px;
+  background-image: radial-gradient(
+    circle,
+    var(--yellow-400) 0 3px,
+    transparent 3.5px
+  );
+  background-size: 16px 16px;
+  transform: rotate(-8deg);
 }
 .brand {
   display: flex;
@@ -281,13 +346,14 @@ aside {
   font-size: 24px;
   font-weight: 800;
   letter-spacing: 1px;
+  color: var(--surface);
 }
 .brand svg {
-  color: var(--primary);
+  color: var(--yellow-400);
 }
 .tagline {
   font-size: 12px;
-  color: var(--muted);
+  color: var(--violet-100);
   margin: 10px 0 28px;
   letter-spacing: 1px;
 }
@@ -305,7 +371,7 @@ nav button {
   padding: 13px 15px;
   min-height: 44px;
   background: transparent;
-  color: var(--ink-soft);
+  color: var(--violet-50);
   border-radius: var(--radius);
   font-weight: 600;
   font-size: 14px;
@@ -314,15 +380,17 @@ nav button {
     color var(--dur) var(--ease);
 }
 nav button:hover {
-  background: var(--surface-3);
+  background: color-mix(in srgb, var(--surface) 14%, transparent);
 }
 nav button:active {
-  background: var(--surface-2);
+  background: color-mix(in srgb, var(--surface) 22%, transparent);
 }
 nav button.active {
-  background: var(--primary);
-  color: var(--on-primary);
-  box-shadow: var(--shadow-sm);
+  background: var(--nav-active-bg);
+  color: var(--nav-active-fg);
+  box-shadow:
+    inset 0 -4px 0 var(--nav-active-border),
+    4px 4px 0 var(--violet-900);
 }
 nav i {
   font-style: normal;
@@ -339,12 +407,14 @@ nav i {
   margin-top: auto;
 }
 .quiet {
-  background: var(--surface-3);
+  border: 2px solid var(--violet-900);
+  background: var(--yellow-400);
   padding: 16px;
   border-radius: var(--radius);
   line-height: 1.8;
   font-size: 13px;
-  color: var(--ink-soft);
+  color: var(--violet-900);
+  box-shadow: 4px 4px 0 var(--violet-900);
 }
 .quiet strong {
   display: block;
@@ -357,14 +427,15 @@ nav i {
   align-items: center;
   gap: 12px;
   margin-top: 20px;
-  border-top: 1px solid var(--line);
+  border-top: 1px solid var(--violet-200);
   padding-top: 18px;
   font-size: 14px;
   font-weight: 600;
+  color: var(--surface);
 }
 .avatar {
-  background: var(--surface-2);
-  color: var(--primary-strong);
+  background: var(--orange-500);
+  color: var(--violet-900);
   border-radius: 50%;
   width: 38px;
   height: 38px;
@@ -374,7 +445,7 @@ nav i {
 }
 .profile small {
   display: block;
-  color: var(--muted);
+  color: var(--violet-100);
   font-size: 12px;
   font-weight: 500;
   margin-top: 4px;
@@ -384,15 +455,20 @@ main {
   margin-left: 228px;
   padding: 30px 44px 28px;
   max-width: 1600px;
+  min-height: 100vh;
 }
 header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 16px;
-  border-bottom: 1px solid var(--line);
-  padding-bottom: 20px;
+  border: 2px solid var(--violet-200);
+  border-bottom-color: var(--violet-600);
+  border-radius: var(--radius-lg);
+  padding: 14px 18px;
   margin-bottom: 28px;
+  background: var(--surface);
+  box-shadow: 4px 4px 0 var(--orange-300);
 }
 .breadcrumb {
   display: flex;
@@ -432,9 +508,10 @@ header {
   align-items: center;
   gap: 6px;
   padding: 8px 14px;
-  background: var(--surface-2);
+  background: var(--yellow-400);
+  border: 1px solid var(--violet-900);
   border-radius: var(--radius-pill);
-  color: var(--primary-strong);
+  color: var(--violet-900);
   font-weight: 700;
 }
 .footer {

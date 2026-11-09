@@ -1,14 +1,7 @@
-import { kana, kanaWords, katakanaOrigins, type Level } from "../data/kana";
 import type { Card } from "../types";
 export interface Question {
   id: string;
-  kind:
-    | "sound-to-kana"
-    | "kana-to-sound"
-    | "word"
-    | "card-meaning"
-    | "card-reading"
-    | "card-choice";
+  kind: "card-meaning" | "card-reading" | "card-choice";
   prompt: string;
   hint: string;
   reading?: string;
@@ -42,56 +35,6 @@ function choices(answer: string, pool: string[], random: () => number) {
     random,
   );
 }
-export function buildQuestions(level: Level, random = Math.random): Question[] {
-  if (level.kind === "word")
-    return shuffle(
-      kanaWords.filter((w) => w.script === level.script),
-      random,
-    ).map((word, index) => ({
-      id: `${level.id}-${index}`,
-      kind: "word",
-      prompt: word.text,
-      hint: "这个词是什么意思？",
-      reading: word.romaji,
-      speak: word.text,
-      answer: word.meaning,
-      options: choices(
-        word.meaning,
-        kanaWords.map((w) => w.meaning),
-        random,
-      ),
-      explanation: `${word.text}（${word.romaji}）的意思是「${word.meaning}」。`,
-    }));
-  const targets = shuffle(
-    kana.filter((k) => level.rows.includes(k.row)),
-    random,
-  );
-  return Array.from({ length: 15 }, (_, index) => {
-    const target = targets[index % targets.length];
-    const text = target[level.script];
-    const soundToKana =
-      level.script === "katakana" ? index % 4 === 3 : index % 2 === 0;
-    const answer = soundToKana ? text : target.reading;
-    const pool = kana
-      .filter((k) => k.reading !== target.reading)
-      .map((k) => (soundToKana ? k[level.script] : k.reading));
-    const origin =
-      level.script === "katakana" ? katakanaOrigins[text] : undefined;
-    return {
-      id: `${level.id}-${index}`,
-      kind: soundToKana ? "sound-to-kana" : "kana-to-sound",
-      prompt: soundToKana ? target.reading : text,
-      hint: soundToKana ? "选择这个读音对应的假名" : "选择这个假名的读音",
-      speak: text,
-      answer,
-      options: choices(answer, pool, random),
-      explanation: origin
-        ? `${target.hiragana} / ${target.katakana} 的读音是 ${target.reading}。${text} 来自汉字「${origin.source}」：${origin.story}`
-        : `${target.hiragana} / ${target.katakana} 的读音是 ${target.reading}。`,
-    };
-  });
-}
-
 function strings(items: (string | undefined)[]): string[] {
   return items.filter((item): item is string => typeof item === "string");
 }
@@ -165,11 +108,4 @@ export function resultFor(correct: number, total: number): QuizResult {
     total,
     stars: ratio === 1 ? 3 : ratio >= 0.9 ? 2 : ratio >= 0.8 ? 1 : 0,
   };
-}
-export function isUnlocked(
-  index: number,
-  levels: Level[],
-  results: Record<string, QuizResult>,
-) {
-  return index === 0 || (results[levels[index - 1].id]?.stars ?? 0) > 0;
 }

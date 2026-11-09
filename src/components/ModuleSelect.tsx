@@ -1,4 +1,4 @@
-import { ArrowRight, FlowerLotus } from "@phosphor-icons/react";
+import { ArrowRight, Sparkle } from "@phosphor-icons/react";
 import { modules } from "../data/modules";
 import type { ModuleId } from "../types";
 
@@ -11,7 +11,7 @@ export default function ModuleSelect({
     <div className="module-select">
       <div className="module-select-head">
         <div className="brand">
-          <FlowerLotus size={26} weight="regular" />
+          <Sparkle size={26} weight="regular" aria-hidden="true" />
           学点新的？
         </div>
         <div className="tagline">Learn sth new?</div>
