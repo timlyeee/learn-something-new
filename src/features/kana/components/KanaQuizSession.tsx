@@ -1,8 +1,7 @@
-import { useRef, useState } from "react";
 import { Plant, SpeakerHigh, Trophy, X } from "@phosphor-icons/react";
-import { useSoundEffects } from "../../exercises/audio/useSoundEffects";
+import { useExerciseSession } from "../../exercises/useExerciseSession";
 import SoundEffectsToggle from "../../exercises/components/SoundEffectsToggle";
-import { resultFor, type QuizResult } from "../../../lib/quiz";
+import type { QuizResult } from "../../../lib/quiz";
 import { speak } from "../../../lib/speech";
 import type { KanaExerciseSet, KanaQuestion } from "../domain/types";
 import KanaChoiceQuestion from "./KanaChoiceQuestion";
@@ -44,73 +43,44 @@ export default function KanaQuizSession({
   finish: (result: QuizResult) => void;
   exit: () => void;
 }) {
-  const [questions, setQuestions] = useState(() => flatten(rebuild()));
-  const [index, setIndex] = useState(0);
-  const [selected, setSelected] = useState<string | null>(null);
-  const [score, setScore] = useState(0);
-  const [mistakes, setMistakes] = useState<SessionQuestion[]>([]);
-  const [done, setDone] = useState(false);
-  const [practice, setPractice] = useState(false);
-  const { soundEffectsEnabled, toggleSoundEffects, playCorrect } =
-    useSoundEffects();
-  const recorded = useRef(false);
-  const current = questions[index];
-  const question = current?.question;
-  const correct = selected === question?.answer;
-  const result = resultFor(score, questions.length);
-  const sectionTitles = [
-    ...new Set(questions.map((item) => item.sectionTitle)),
-  ];
-  const activeSection = current
-    ? sectionTitles.indexOf(current.sectionTitle)
-    : 0;
-
-  function restart(onlyMistakes: boolean): void {
-    const nextQuestions = onlyMistakes
-      ? mistakes.map((item) => ({
-          ...item,
-          sectionTitle: "错题巩固",
-          sectionDescription: "只复习刚才没有掌握的题目",
-        }))
-      : flatten(rebuild());
-    setQuestions(nextQuestions);
-    setIndex(0);
-    setSelected(null);
-    setScore(0);
-    setMistakes([]);
-    setDone(false);
-    setPractice(onlyMistakes);
-    recorded.current = false;
-  }
+  const {
+    questions,
+    index,
+    current,
+    submission,
+    score,
+    mistakes,
+    done,
+    practice,
+    result,
+    soundEffectsEnabled,
+    toggleSoundEffects,
+    answer: submitAnswer,
+    next,
+    restart,
+  } = useExerciseSession<SessionQuestion, string | null>(
+    () => flatten(rebuild()),
+    finish,
+  );
+  const question = current.question;
+  const selected = submission?.response ?? null;
+  const answered = submission !== null;
+  const correct = submission?.correct ?? false;
+  const sectionTitle = practice ? "错题巩固" : current.sectionTitle;
+  const sectionDescription = practice
+    ? "只复习刚才没有掌握的题目"
+    : current.sectionDescription;
+  const sectionTitles = practice
+    ? ["错题巩固"]
+    : [...new Set(questions.map((item) => item.sectionTitle))];
+  const activeSection = sectionTitles.indexOf(sectionTitle);
 
   function answer(value: string): void {
-    if (!question || selected !== null) return;
-    setSelected(value);
-    if (value === question.answer) {
-      setScore((currentScore) => currentScore + 1);
-      playCorrect();
-    } else {
-      setMistakes((items) => [...items, current]);
-    }
+    submitAnswer({ correct: value === question.answer, response: value });
   }
 
   function answerSelfCheck(isCorrect: boolean): void {
-    if (!question) return;
-    answer(isCorrect ? question.answer : "__needs-practice__");
-  }
-
-  function next(): void {
-    if (selected === null) return;
-    if (index + 1 < questions.length) {
-      setIndex(index + 1);
-      setSelected(null);
-      return;
-    }
-    if (!recorded.current && !practice) {
-      recorded.current = true;
-      finish(result);
-    }
-    setDone(true);
+    submitAnswer({ correct: isCorrect, response: null });
   }
 
   if (done)
@@ -174,8 +144,6 @@ export default function KanaQuizSession({
       </section>
     );
 
-  if (!question || !current) return null;
-
   return (
     <section className="quiz-card kana-quiz-card">
       <div className="quiz-top">
@@ -227,8 +195,8 @@ export default function KanaQuizSession({
         <span>
           第 {activeSection + 1} / {sectionTitles.length} 部分
         </span>
-        <h2>{current.sectionTitle}</h2>
-        <p>{current.sectionDescription}</p>
+        <h2>{sectionTitle}</h2>
+        <p>{sectionDescription}</p>
       </div>
       <h3 className="question-title">{question.hint}</h3>
       <button className="sound-button" onClick={() => speak(question.speak)}>
@@ -239,14 +207,14 @@ export default function KanaQuizSession({
         <KanaWritingQuestion
           key={question.id}
           question={question}
-          disabled={selected !== null}
+          disabled={answered}
           onAnswer={answerSelfCheck}
         />
       ) : question.kind === "kana-matching" ? (
         <KanaMatchingQuestion
           key={question.id}
           question={question}
-          disabled={selected !== null}
+          disabled={answered}
           onAnswer={answerSelfCheck}
         />
       ) : (
@@ -258,10 +226,10 @@ export default function KanaQuizSession({
       )}
 
       <div
-        className={`answer-feedback ${selected !== null ? (correct ? "good" : "retry") : ""}`}
+        className={`answer-feedback ${answered ? (correct ? "good" : "retry") : ""}`}
         role="status"
       >
-        {selected !== null ? (
+        {answered ? (
           <>
             <strong>
               {correct ? "✓ 完成了！" : `再记一次：${question.answer}`}
@@ -280,7 +248,7 @@ export default function KanaQuizSession({
                 : "选出你的答案，再继续下一题。"}
           </p>
         )}
-        <button className="primary" disabled={selected === null} onClick={next}>
+        <button className="primary" disabled={!answered} onClick={next}>
           {index + 1 === questions.length ? "查看成绩" : "继续 →"}
         </button>
       </div>

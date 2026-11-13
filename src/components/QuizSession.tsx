@@ -1,8 +1,7 @@
-import { useRef, useState } from "react";
 import { X, SpeakerHigh, Trophy, Plant } from "@phosphor-icons/react";
-import { useSoundEffects } from "../features/exercises/audio/useSoundEffects";
+import { useExerciseSession } from "../features/exercises/useExerciseSession";
 import SoundEffectsToggle from "../features/exercises/components/SoundEffectsToggle";
-import { resultFor, type Question, type QuizResult } from "../lib/quiz";
+import type { Question, QuizResult } from "../lib/quiz";
 import { speak } from "../lib/speech";
 
 export default function QuizSession({
@@ -18,52 +17,27 @@ export default function QuizSession({
   finish: (result: QuizResult) => void;
   exit: () => void;
 }) {
-  const [questions, setQuestions] = useState(rebuild);
-  const [index, setIndex] = useState(0);
-  const [selected, setSelected] = useState<string | null>(null);
-  const [score, setScore] = useState(0);
-  const [mistakes, setMistakes] = useState<Question[]>([]);
-  const [done, setDone] = useState(false);
-  const [practice, setPractice] = useState(false);
-  const { soundEffectsEnabled, toggleSoundEffects, playCorrect } =
-    useSoundEffects();
-  const recorded = useRef(false);
-  const question = questions[index];
-  const correct = selected === question?.answer;
-  const result = resultFor(score, questions.length);
+  const {
+    questions,
+    index,
+    current: question,
+    submission,
+    score,
+    mistakes,
+    done,
+    practice,
+    result,
+    soundEffectsEnabled,
+    toggleSoundEffects,
+    answer: submitAnswer,
+    next,
+    restart,
+  } = useExerciseSession<Question, string>(rebuild, finish);
+  const selected = submission?.response ?? null;
+  const correct = submission?.correct ?? false;
 
-  function restart(onlyMistakes: boolean) {
-    setQuestions(onlyMistakes ? mistakes : rebuild());
-    setIndex(0);
-    setSelected(null);
-    setScore(0);
-    setMistakes([]);
-    setDone(false);
-    setPractice(onlyMistakes);
-    recorded.current = false;
-  }
-  function next() {
-    if (selected === null) return;
-    if (index + 1 < questions.length) {
-      setIndex(index + 1);
-      setSelected(null);
-      return;
-    }
-    if (!recorded.current && !practice) {
-      recorded.current = true;
-      finish(result);
-    }
-    setDone(true);
-  }
   function answer(value: string): void {
-    if (selected !== null) return;
-    setSelected(value);
-    if (value === question.answer) {
-      setScore((currentScore) => currentScore + 1);
-      playCorrect();
-    } else {
-      setMistakes((items) => [...items, question]);
-    }
+    submitAnswer({ correct: value === question.answer, response: value });
   }
   if (done)
     return (

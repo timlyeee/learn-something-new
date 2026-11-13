@@ -44,6 +44,8 @@
 
 `src/pages/Kana.tsx` 和 `src/data/kana.ts` 只保留兼容入口。跨功能的卡片测验继续使用通用 `QuizSession`。
 
+普通卡片与假名练习共用 `features/exercises` 中的答题会话生命周期；假名展示保留步骤与各题型 adapter，手写自评和配对直接提交正确与否，详见 [答题会话生命周期](007-exercise-session.md)。
+
 ## 视觉调整
 
 - 整体改为鲜亮橙色与电光紫的撞色体系，辅以少量黄色和薄荷绿几何点缀；视觉关键词为艺术海报、Memphis 几何装饰和轻量新粗野主义。
